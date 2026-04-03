@@ -19,13 +19,37 @@
       const root = ReactDOM.createRoot(container);
       const userPic = "https://supersimple.dev/projects/chatbot/user.png";
       const robotPic = "https://supersimple.dev/projects/chatbot/robot.png";
+      const messagesList = [
+        {
+          message: "hello chatbot",
+          sender: "user",
+          id: 101,
+        },
+        {
+          message: "Hello! How can I help you?",
+          sender: "robot",
+          id: 102,
+        },
+        {
+          message: "can you get me todays date",
+          sender: "user",
+          id: 103,
+        },
+        {
+          message: "Today is April 3",
+          sender: "robot",
+          id: 104,
+        },
+      ];
 
       function ChatInput() {
         return (
-          <>
+          <form action="submit">
             <input placeholder="Send message to chatbot" size="30" />
-            <button>Send</button>
-          </>
+            <button type="submit" onClick={HandleSendMessage}>
+              Send Message
+            </button>
+          </form>
         );
       }
 
@@ -42,37 +66,30 @@
         );
       }
 
-      function ChatMessages() {
-        const messagesList = [
-          {
-            message: "hello chatbot",
-            sender: "user",
-            id: 101,
-          },
-          {
-            message: "Hello! How can I help you?",
-            sender: "robot",
-            id: 102,
-          },
-          {
-            message: "can you get me todays date",
-            sender: "user",
-            id: 103,
-          },
-          {
-            message: "Today is April 3",
-            sender: "robot",
-            id: 104,
-          },
-        ];
+      function HandleSendMessage(e) {
+        e.preventDefault();
 
-        return messagesList.map((instance) => (
-          <DisplayMessage
-            key={instance.id}
-            message={instance.message}
-            sender={instance.sender}
-          />
-        ));
+        const userMessage = {
+          message: e.target.value,
+          sender: "user",
+          id: Math.floor(Math.random() * 900) + 100,
+        };
+        // messagesList.push(userMessage);
+        console.log(e.target.value);
+      }
+
+      function ChatMessages() {
+        return (
+          <>
+            {messagesList.map((instance) => (
+              <DisplayMessage
+                key={instance.id}
+                message={instance.message}
+                sender={instance.sender}
+              />
+            ))}
+          </>
+        );
       }
 
       function App() {
