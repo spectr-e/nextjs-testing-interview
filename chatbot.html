@@ -27,7 +27,12 @@
         );
       }
 
-      const div = <div>{ChatInput()}</div>;
+      const div = (
+        <div>
+          {ChatInput()}
+          <ChatInput></ChatInput>
+        </div>
+      );
 
       root.render(div);
     </script>
