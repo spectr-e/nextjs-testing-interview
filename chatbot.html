@@ -12,6 +12,7 @@
     <script src="https://unpkg.com/supersimpledev/react.js"></script>
     <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
     <script src="https://unpkg.com/supersimpledev/dayjs.js"></script>
+    <script src="https://unpkg.com/supersimpledev/chatbot.js"></script>
     <script src="https://unpkg.com/supersimpledev/babel.js"></script>
 
     <script type="text/babel">
@@ -20,7 +21,51 @@
       const userPic = "https://supersimple.dev/projects/chatbot/user.png";
       const robotPic = "https://supersimple.dev/projects/chatbot/robot.png";
 
-      // app functions
+      function ChatInput({ messages, setMessage }) {
+        const [inputText, setInputText] = React.useState("");
+        function HandleInputChange(e) {
+          setInputText(e.target.value);
+        }
+        function HandleSendMessage(e) {
+          e.preventDefault();
+          const newChatMessages = [
+            ...messages,
+            {
+              message: inputText,
+              sender: "user",
+              id: Math.floor(Math.random() * 900) + 100,
+            },
+          ];
+
+          setMessage(newChatMessages);
+
+          const response = Chatbot.getResponse(inputText);
+
+          setMessage(() => [
+            ...newChatMessages,
+            {
+              message: response,
+              sender: "robot",
+              id: Math.floor(Math.random() * 900) + 100,
+            },
+          ]);
+
+          setInputText("");
+        }
+        return (
+          <form action="submit">
+            <input
+              placeholder="Send message to chatbot"
+              size="30"
+              onChange={HandleInputChange}
+              value={inputText}
+            />
+            <button type="submit" onClick={HandleSendMessage}>
+              Send Message
+            </button>
+          </form>
+        );
+      }
 
       function DisplayMessage({ message, sender }) {
         return (
@@ -35,8 +80,22 @@
         );
       }
 
-      function ChatMessages() {
-        const messagesArray = React.useState([
+      function ChatMessages({ messages }) {
+        return (
+          <>
+            {messages.map((instance) => (
+              <DisplayMessage
+                key={instance.id}
+                message={instance.message}
+                sender={instance.sender}
+              />
+            ))}
+          </>
+        );
+      }
+
+      function App() {
+        const [messages, setMessage] = React.useState([
           {
             message: "hello chatbot",
             sender: "user",
@@ -59,49 +118,11 @@
           },
         ]);
 
-        const messagesList = messagesArray[0];
-        const setNewMessage = messagesArray[1];
-
-        // handlers
-        function HandleSendMessage(e) {
-          e.preventDefault();
-          const userMessage = {
-            message: "I wonder what is going on",
-            sender: "user",
-            id: Math.floor(Math.random() * 900) + 100,
-          };
-          setNewMessage([...messagesList, userMessage]);
-        }
-
-        function ChatInput() {
-          return (
-            <form action="submit">
-              <input placeholder="Send message to chatbot" size="30" />
-              <button type="submit" onClick={HandleSendMessage}>
-                Send Message
-              </button>
-            </form>
-          );
-        }
-
         return (
           <>
-            <ChatInput />
-            {messagesList.map((instance) => (
-              <DisplayMessage
-                key={instance.id}
-                message={instance.message}
-                sender={instance.sender}
-              />
-            ))}
-          </>
-        );
-      }
+            <ChatInput messages={messages} setMessage={setMessage} />
 
-      function App() {
-        return (
-          <>
-            <ChatMessages />
+            <ChatMessages messages={messages} />
           </>
         );
       }
