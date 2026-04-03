@@ -20,21 +20,20 @@
 
       function ChatInput() {
         return (
-          <div>
-            <input />
+          <>
+            <input placeholder="Send message to chatbot" size="30" />
             <button>Send</button>
-          </div>
+          </>
         );
       }
 
-      const div = (
-        <div>
-          {ChatInput()}
-          <ChatInput></ChatInput>
-        </div>
+      const app = (
+        <>
+          <ChatInput />
+        </>
       );
 
-      root.render(div);
+      root.render(app);
     </script>
   </body>
 </html>
